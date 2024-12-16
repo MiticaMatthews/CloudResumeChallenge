@@ -204,3 +204,51 @@ az cdn endpoint purge \
 ```
 
 The purge command can take some time to complete. To avoid having to wait for the process to finish, use the `--no-wait` option so that the command returns immediately while the purge continues in the background.
+
+## Configure CosmosDB to Store Visitor Count
+
+
+Run the following command to check if the provider is already registered: 
+
+```
+az provider show --namespace Microsoft.DocumentDB --query "registrationState"
+```
+
+If the output shows `"registrationState": "NotRegistered"`, run the following command to register the provider:
+
+```
+az provider register --namespace Microsoft.DocumentDB
+```
+
+Next, re-run the `az provider show` command that is two steps above, to ensure that the registration states is *"Registered"*. 
+
+Run the following command to create a new Azure CosmosDB account:
+
+```
+az cosmosdb create \
+--name portfolioweb-cdb-001 \
+--resource-group rg-StaticWebsite-001 \
+--kind GlobalDocumentDB \
+--locations regionName=northeurope \
+--capabilities EnableServerless \
+--enable-free-tier true
+```
+
+Next, we need to create a database and container to store the visitor count. Run the following commands: 
+
+```
+az cosmosdb sql database create \
+--account-name portfolioweb-cdb-001 \
+--resource-group rg-StaticWebsite-001 \
+--name VisitorCounterDB
+```
+
+```
+az cosmosdb sql container create \
+--account-name portfolioweb-cdb-001 \
+--resource-group rg-StaticWebsite-001 \
+--database-name VisitorCounterDB \
+--name VisitorsContainer \
+--partition-key-path /visitorId
+```
+
