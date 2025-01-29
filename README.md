@@ -252,3 +252,22 @@ az cosmosdb sql container create \
 --partition-key-path /visitorId
 ```
 
+## Create Javascript Visitor Counter 
+
+## Create Azure Function 
+
+### Create Azure Function App
+
+```
+az functionapp create \
+--name VisitorCounterFAPP \
+--resource-group rg-StaticWebsite-001 \
+--storage-account staticwebstorage001 \
+--consumption-plan-location northeurope \
+--runtime python \
+--functions-version 4
+```
+
+### Create the Azure HTTP Trigger Function 
+
+
